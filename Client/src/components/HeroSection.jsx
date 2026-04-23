@@ -55,11 +55,6 @@ function HeroSection() {
                         />
                     </Button>
                 </div>
-                <div className='mx-auto mt-2 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-slate-500'>
-                    <span className='rounded-full bg-white px-4 py-2 shadow-sm ring-1 ring-slate-200'>Curated Listings</span>
-                    <span className='rounded-full bg-white px-4 py-2 shadow-sm ring-1 ring-slate-200'>Responsive Design</span>
-                    <span className='rounded-full bg-white px-4 py-2 shadow-sm ring-1 ring-slate-200'>Client-Ready Presentation</span>
-                </div>
             </motion.div>
 
 

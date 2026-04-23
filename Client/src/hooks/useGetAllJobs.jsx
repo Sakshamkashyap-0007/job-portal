@@ -1,5 +1,5 @@
 import { setAllJobs } from '@/redux/jobSlice'
-import { demoJobs, getDisplayJobs } from '@/utils/demoJobs'
+import { getDisplayJobs } from '@/utils/demoJobs'
 import { JOB_API_END_POINT } from '@/utils/constant'
 import axios from 'axios'
 import React, { useEffect } from 'react'
@@ -24,7 +24,7 @@ const useGetAllJobs = () => {
                 }
             } catch (error) {
                 console.error(error);
-                dispatch(setAllJobs(getDisplayJobs(demoJobs, searchedQuery)));
+                dispatch(setAllJobs(getDisplayJobs([], searchedQuery)));
             }
         }
         fetchAllJobs();

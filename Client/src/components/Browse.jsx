@@ -14,7 +14,7 @@ import { motion } from "framer-motion"
 const Browse = () => {
 
     useGetAllJobs();
-    const { allJobs } = useSelector(store => store.job)
+    const { allJobs, searchedQuery } = useSelector(store => store.job)
 
     const dispatch = useDispatch();
 
@@ -33,17 +33,34 @@ const Browse = () => {
             <Navbar />
 
             <div className='px-[5%] lg:px-[10%] w-full my-10'>
-                <motion.h1
+                <motion.div
                     initial={{ opacity: 0.2, y: 100 }}
                     transition={{ duration: 1 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{}}
-                    className='font-bold text-xl my-10'>Search Results ({allJobs.length})</motion.h1>
+                    className='rounded-3xl border border-slate-200 bg-gradient-to-r from-slate-50 via-white to-orange-50 p-6 shadow-sm'
+                >
+                    <p className='text-sm font-medium uppercase tracking-[0.2em] text-slate-500'>Browse Opportunities</p>
+                    <div className='mt-3 flex flex-col gap-4 md:flex-row md:items-end md:justify-between'>
+                        <div>
+                            <h1 className='text-2xl font-bold text-slate-900 md:text-4xl'>Search Results ({allJobs.length})</h1>
+                            <p className='mt-2 max-w-2xl text-sm text-slate-600 md:text-base'>
+                                Explore curated roles across product, engineering, data, design, growth, and operations.
+                            </p>
+                        </div>
+                        <div className='flex flex-wrap gap-2'>
+                            <span className='rounded-full bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200'>
+                                {searchedQuery ? `Active filter: ${searchedQuery}` : 'Showing all open roles'}
+                            </span>
+                        </div>
+                    </div>
+                </motion.div>
 
                 {
                     allJobs.length <= 0 &&
-                    <div className='text-gray-500 hover:text-gray-400 text-xl flex justify-center'>
-                        <p className='text-center'>No Jobs Found!</p>
+                    <div className='mt-10 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center text-slate-500'>
+                        <p className='text-lg font-semibold text-slate-700'>No jobs found</p>
+                        <p className='mt-2 text-sm'>Try a broader search like `Frontend`, `Backend`, `Data Science`, or `DevOps`.</p>
                     </div>
                 }
 
@@ -52,8 +69,8 @@ const Browse = () => {
                     transition={{ duration: 1 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{}}
-                    className=' overflow-y-auto pb-5'>
-                    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 '>
+                    className='overflow-y-auto pb-5'>
+                    <div className='mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3'>
                         {
                             allJobs.map((job) => {
                                 return (

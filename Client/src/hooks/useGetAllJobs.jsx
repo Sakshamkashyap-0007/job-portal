@@ -1,4 +1,5 @@
 import { setAllJobs } from '@/redux/jobSlice'
+import { getDisplayJobs } from '@/utils/demoJobs'
 import { JOB_API_END_POINT } from '@/utils/constant'
 import axios from 'axios'
 import React, { useEffect } from 'react'
@@ -11,21 +12,20 @@ const useGetAllJobs = () => {
 
     useEffect(() => {
         const fetchAllJobs = async () => {
-            console.log(searchedQuery);
-            
             try {
                 const response = await axios.get(`${JOB_API_END_POINT}/get?keyword=${searchedQuery}`, {
                     withCredentials: true
                 });
                 if (response.data.success) {
-                    dispatch(setAllJobs(response.data.jobs))
+                    dispatch(setAllJobs(getDisplayJobs(response.data.jobs, searchedQuery)))
                 }
             } catch (error) {
                 console.error(error);
+                dispatch(setAllJobs(getDisplayJobs([], searchedQuery)));
             }
         }
         fetchAllJobs();
-    }, [])
+    }, [dispatch, searchedQuery])
 
 
 

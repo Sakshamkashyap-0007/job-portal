@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { APPLICANT_API_END_POINT, JOB_API_END_POINT } from '@/utils/constant'
+import { getDemoJobById } from '@/utils/demoJobs'
 import { setSingleJob } from '@/redux/jobSlice'
 import { toast } from 'sonner'
 import Navbar from './shared/Navbar'
@@ -21,9 +22,15 @@ const JobDescription = () => {
 
   const params = useParams();
   const jobId = params.id;
+  const demoJob = getDemoJobById(jobId);
 
 
   const applyJobHandler = async () => {
+    if (singleJob?.isDemo) {
+      toast.info("This is a demo listing for client presentation.");
+      return;
+    }
+
     try {
       const response = await axios.post(`${APPLICANT_API_END_POINT}/apply/${jobId}`, {}, {
         withCredentials: true
@@ -44,6 +51,12 @@ const JobDescription = () => {
   }
 
   useEffect(() => {
+    if (demoJob) {
+      dispatch(setSingleJob(demoJob));
+      setIsApplied(false);
+      return;
+    }
+
     const fetchSingleJobDescription = async () => {
       try {
         const response = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, {
@@ -58,7 +71,7 @@ const JobDescription = () => {
       }
     }
     fetchSingleJobDescription();
-  }, [jobId, dispatch, user?._id])
+  }, [demoJob, jobId, dispatch, user?._id])
 
 
 
@@ -86,7 +99,7 @@ const JobDescription = () => {
           </div>
           <Button onClick={isApplied ? null : applyJobHandler} disabled={isApplied} className={`rounded-lg ${isApplied ? 'bg-gray-600 cursor-not-allowed' : 'bg-[#7209b7] hover:bg-[#5f08ad] cursor-pointer'} `}>
             {
-              isApplied ? 'Applied' : 'Apply Now'
+              isApplied ? 'Applied' : singleJob?.isDemo ? 'Demo Listing' : 'Apply Now'
             }
           </Button>
         </div>
@@ -100,7 +113,7 @@ const JobDescription = () => {
           <h1 className='font-bold my-1'>Experience: <span className='pl-4 font-normal text-gray-800'>{singleJob?.experience} yrs</span></h1>
           <h1 className='font-bold my-1'>Salary: <span className='pl-4 font-normal text-gray-800'>{singleJob?.salary} LPA</span></h1>
           <h1 className='font-bold my-1'>Total Applicaants: <span className='pl-4 font-normal text-gray-800'>{singleJob?.applications?.length}</span></h1>
-          <h1 className='font-bold my-1'>Posted Date: <span className='pl-4 font-normal text-gray-800'>{singleJob?.createdAt.split("T")[0]}</span></h1>
+          <h1 className='font-bold my-1'>Posted Date: <span className='pl-4 font-normal text-gray-800'>{singleJob?.createdAt?.split("T")[0]}</span></h1>
         </div>
 
 

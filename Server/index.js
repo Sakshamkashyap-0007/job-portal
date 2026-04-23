@@ -11,23 +11,27 @@ dotenv.config({});
 
 const app = express();
 
-connectDB()
+const allowedOrigins = [
+    process.env.FRONTEND_URL,
+    "https://jobportal0007.vercel.app",
+].filter(Boolean);
 
 // middlewares
+const corsOptions = {
+    origin: allowedOrigins,
+    credentials: true,
+}
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-const corsOptions = {
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-    credentials: true,
-}
-app.use(cors(corsOptions));
 
 app.get("/",(req,res)=>{
     res.send("Welcome to the server");
 })
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 
 
 app.use("/api/v1/user", userRouter);
@@ -36,7 +40,15 @@ app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/application", applicantionRouter);
 
 
-app.listen(PORT, () => {
-    
-    console.log(`Server running at port ${PORT}`);
-})
+const startServer = async () => {
+    try {
+        await connectDB();
+        app.listen(PORT, () => {
+            console.log(`Server running at port ${PORT}`);
+        });
+    } catch (error) {
+        process.exit(1);
+    }
+};
+
+startServer();
